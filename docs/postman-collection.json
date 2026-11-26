@@ -1,0 +1,232 @@
+{
+  "info": {
+    "name": "Movie Booking App - Lecture 2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Sample requests for the Express server. Start it with npm start first."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Home (text)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": []
+        },
+        "description": "200, text/plain"
+      }
+    },
+    {
+      "name": "Demo page (HTML)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/demo",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "demo"
+          ]
+        },
+        "description": "200, text/html"
+      }
+    },
+    {
+      "name": "Health (JSON)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "health"
+          ]
+        },
+        "description": "200, application/json"
+      }
+    },
+    {
+      "name": "List movies",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/movies",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "movies"
+          ]
+        },
+        "description": "200. Check the X-Middleware-Trace response header."
+      }
+    },
+    {
+      "name": "Create movie",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/movies",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "movies"
+          ]
+        },
+        "description": "201. The body is not read yet (placeholder).",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Example Movie\",\n  \"language\": \"Marathi\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Get one movie",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/movies/42",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "movies",
+            "42"
+          ]
+        },
+        "description": "200"
+      }
+    },
+    {
+      "name": "Replace movie",
+      "request": {
+        "method": "PUT",
+        "url": {
+          "raw": "{{baseUrl}}/api/movies/42",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "movies",
+            "42"
+          ]
+        },
+        "description": "200",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Example Movie\",\n  \"language\": \"Marathi\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Update part of movie",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "{{baseUrl}}/api/movies/42",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "movies",
+            "42"
+          ]
+        },
+        "description": "200",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Example Movie\",\n  \"language\": \"Marathi\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Delete movie",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{baseUrl}}/api/movies/42",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "movies",
+            "42"
+          ]
+        },
+        "description": "200"
+      }
+    },
+    {
+      "name": "Wrong method (405)",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{baseUrl}}/api/movies",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "movies"
+          ]
+        },
+        "description": "405 with Allow: GET, HEAD, POST"
+      }
+    },
+    {
+      "name": "Unknown route (404)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/shows",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "shows"
+          ]
+        },
+        "description": "404 JSON error"
+      }
+    }
+  ]
+}
