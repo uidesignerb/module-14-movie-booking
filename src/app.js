@@ -1,39 +1,51 @@
 'use strict';
 
-const { routes, sendText, sendJson } = require('./routes');
+const express = require('express');
+const requestLogger = require('./middleware/requestLogger');
+const methodNotAllowed = require('./middleware/methodNotAllowed');
+const moviesRouter = require('./routes/movies');
 
-// Main request handler: looks up the path, then the method.
-function handleRequest(req, res) {
-  const { pathname } = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-  const route = routes[pathname];
-  const isApi = pathname.startsWith('/api/');
+const app = express();
 
-  // 404: unknown path
-  if (!route) {
-    if (isApi) return sendJson(res, 404, { error: 'Not Found' });
-    return sendText(res, 404, 'Not Found\n');
-  }
+// 1. Application-level middleware: runs first, for every request.
+app.use(requestLogger);
 
-  // HEAD is answered like GET; Node omits the body automatically.
-  const method = req.method === 'HEAD' && route.GET ? 'GET' : req.method;
-  const handler = route[method];
+// 2. Routes defined directly on the app (from Lecture 1, now in Express).
+//    res.send() picks the Content-Type itself: a string is sent as text/html and an
+//    object as application/json. '/' calls res.type('text') to keep Lecture 1's text/plain.
+const demoPage = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Demo</title>
+  </head>
+  <body>
+    <h1>Demo page</h1>
+    <p>This HTML was sent by an Express server with res.send().</p>
+  </body>
+</html>
+`;
 
-  // 405: known path, unsupported method
-  if (!handler) {
-    const allowed = Object.keys(route);
-    if (allowed.includes('GET')) allowed.push('HEAD');
-    const headers = { Allow: allowed.join(', ') };
-    if (isApi) return sendJson(res, 405, { error: 'Method Not Allowed' }, headers);
-    return sendText(res, 405, 'Method Not Allowed\n', headers);
-  }
+app.route('/')
+  .get((req, res) => res.type('text').send('Hello from the movie booking server!\n'))
+  .all(methodNotAllowed(['GET', 'HEAD']));
 
-  try {
-    handler(req, res);
-  } catch (err) {
-    console.error(err);
-    if (!res.headersSent) sendText(res, 500, 'Internal Server Error\n');
-    else res.end();
-  }
-}
+app.route('/demo')
+  .get((req, res) => res.send(demoPage))
+  .all(methodNotAllowed(['GET', 'HEAD']));
 
-module.exports = { handleRequest };
+app.route('/api/health')
+  .get((req, res) => res.send({ status: 'ok' }))
+  .all(methodNotAllowed(['GET', 'HEAD']));
+
+// 3. Router: requests under /api/movies go through the movies router and its own middleware.
+app.use('/api/movies', moviesRouter);
+
+// 4. Nothing matched: 404 (JSON under /api/, plain text elsewhere), as in Lecture 1.
+app.use((req, res) => {
+  res.status(404);
+  if (req.originalUrl.startsWith('/api/')) return res.json({ error: 'Not Found' });
+  return res.type('text').send('Not Found\n');
+});
+
+module.exports = app;

@@ -1,7 +1,7 @@
 {
   "name": "movie-booking-app",
-  "version": "0.1.0",
-  "description": "Scaler Module 14 project: a movie ticket booking app (Lecture 1: dependency-free Node.js HTTP server).",
+  "version": "0.2.0",
+  "description": "Scaler Module 14 project: a movie ticket booking app (Lecture 2: Express routes and middleware).",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -11,5 +11,8 @@
     "node": ">=18"
   },
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "express": "^4.22.3"
+  }
 }
